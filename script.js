@@ -1,0 +1,6 @@
+const menu=document.querySelector('.menu'),nav=document.querySelector('nav');
+menu.addEventListener('click',()=>{const open=nav.classList.toggle('open');menu.setAttribute('aria-expanded',String(open));});
+nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{nav.classList.remove('open');menu.setAttribute('aria-expanded','false');}));
+const buttons=[...document.querySelectorAll('[data-filter]')],rows=[...document.querySelectorAll('.publication')],search=document.querySelector('#pub-search');let filter='all';
+function update(){const term=search.value.toLowerCase().trim();let count=0;rows.forEach(row=>{const year=row.dataset.year;const match=(filter==='all'||filter===year||(filter==='earlier'&&Number(year)<=2023))&&row.textContent.toLowerCase().includes(term);row.hidden=!match;if(match)count++;});document.querySelector('.result-count').textContent=`${count} of ${rows.length} selected publications`;document.querySelector('#empty').hidden=count!==0;}
+buttons.forEach(button=>button.addEventListener('click',()=>{filter=button.dataset.filter;buttons.forEach(b=>{b.classList.toggle('active',b===button);b.setAttribute('aria-pressed',String(b===button));});update();}));search.addEventListener('input',update);document.querySelector('#year').textContent=new Date().getFullYear();update();
